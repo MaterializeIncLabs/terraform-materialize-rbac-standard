@@ -7,13 +7,20 @@ terraform {
   }
 }
 
+# this needs to be set in a TF_VAR_materialize_app_password env var or a tfvars file
+variable "materialize_app_password" {
+  type = string
+  sensitive = true
+}
+
 provider "materialize" {
-  password       = "your_app_password" 
+  password       = var.materialize_app_password 
   default_region = "aws/us-east-1"
   endpoint = "https://admin.staging.cloud.materialize.com"
   cloud_endpoint = "https://api.staging.cloud.materialize.com"
   base_endpoint = "https://staging.cloud.materialize.com"
 }
+
 
 variable "all_cluster_schema_database_perms" {
   type    = set(string)
