@@ -18,6 +18,27 @@ resource "materialize_role" "devrole" {
   name = "${each.value}-devrole"
 }
 
+resource "materialize_role_parameter" "devrole_database_role_parameter" {
+  for_each = var.team_names
+  role_name      = "${each.value}-devrole"
+  variable_name  = "database"
+  variable_value = "${each.value}"
+}
+
+resource "materialize_role_parameter" "devrole_cluster_role_parameter" {
+  for_each = var.create_dev_clusters ? var.team_names : []
+  role_name      = "${each.value}-devrole"
+  variable_name  = "cluster"
+  variable_value = "${each.value}-dev"
+}
+
+resource "materialize_role_parameter" "devrole_searchpath_role_parameter" {
+  for_each = var.team_names
+  role_name      = "${each.value}-devrole"
+  variable_name  = "search_path"
+  variable_value = "dev"
+}
+
 locals {
   team_cluster_schema_database_perms_dev = {
     for pair in setproduct(var.team_names, var.all_cluster_schema_database_perms) :
