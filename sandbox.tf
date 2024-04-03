@@ -7,6 +7,24 @@ resource "materialize_role" "sandboxrole" {
   name = "sandboxrole"
 }
 
+resource "materialize_role_parameter" "sandboxrole_database_role_parameter" {
+  role_name      = "sandboxrole"
+  variable_name  = "database"
+  variable_value = "materialize"
+}
+
+resource "materialize_role_parameter" "sandboxrole_cluster_role_parameter" {
+  role_name      = "sandboxrole"
+  variable_name  = "cluster"
+  variable_value = "quickstart"
+}
+
+resource "materialize_role_parameter" "sandboxrole_searchpath_role_parameter" {
+  role_name      = "sandboxrole"
+  variable_name  = "search_path"
+  variable_value = "sandbox"
+}
+
 resource "materialize_database_grant" "db_grant_to_sandbox" {
   privilege     = "USAGE"
   role_name     = materialize_role.sandboxrole.name

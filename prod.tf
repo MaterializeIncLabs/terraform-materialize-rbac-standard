@@ -18,6 +18,27 @@ resource "materialize_role" "prodrole" {
   name = "${each.value}-prodrole"
 }
 
+resource "materialize_role_parameter" "prodrole_database_role_parameter" {
+  for_each = var.team_names
+  role_name      = "${each.value}-prodrole"
+  variable_name  = "database"
+  variable_value = "${each.value}"
+}
+
+resource "materialize_role_parameter" "prodrole_cluster_role_parameter" {
+  for_each = var.team_names
+  role_name      = "${each.value}-prodrole"
+  variable_name  = "cluster"
+  variable_value = "${each.value}-prod"
+}
+
+resource "materialize_role_parameter" "prodrole_searchpath_role_parameter" {
+  for_each = var.team_names
+  role_name      = "${each.value}-prodrole"
+  variable_name  = "search_path"
+  variable_value = "prod"
+}
+
 locals {
   team_cluster_schema_database_perms = {
     for pair in setproduct(var.team_names, var.all_cluster_schema_database_perms) :
