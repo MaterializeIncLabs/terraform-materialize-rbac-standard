@@ -13,13 +13,13 @@ resource "materialize_role_parameter" "sandboxrole_database_role_parameter" {
   variable_value = "materialize"
 }
 
-resource "materialize_role_parameter" "prodrole_cluster_role_parameter" {
+resource "materialize_role_parameter" "sandboxrole_cluster_role_parameter" {
   role_name      = "sandboxrole"
   variable_name  = "cluster"
   variable_value = "quickstart"
 }
 
-resource "materialize_role_parameter" "prodrole_searchpath_role_parameter" {
+resource "materialize_role_parameter" "sandboxrole_searchpath_role_parameter" {
   role_name      = "sandboxrole"
   variable_name  = "search_path"
   variable_value = "sandbox"

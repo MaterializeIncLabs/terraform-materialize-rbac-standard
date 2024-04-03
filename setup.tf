@@ -2,7 +2,7 @@ terraform {
   required_providers {
     materialize = {
       source = "MaterializeInc/materialize"
-      version = "0.6.5"
+      version = "0.6.9"
     }
   }
 }
