@@ -11,7 +11,7 @@ This model is meant to support any number of independent teams working in Materi
 
 This model asserts that there will be 3 main roles per team:
 
-*_teamname_\_devrole* : this/these role(s) should ideally only be granted to the CI/CD system for creating and manipulating objects in the production schema. this role(s) has no rights to dev or sandbox schemas. 
+*_teamname_\_prodrole* : this/these role(s) should ideally only be granted to the CI/CD system for creating and manipulating objects in the production schema. this role(s) has no rights to dev or sandbox schemas. 
 
 *_teamname_\_devrole*  : this/these role(s) is the role most humans should be using that are working in the system. it has full rights to development resources within the team. It also has read rights on production, but _not_ rights to use the production cluster. this means if you want to utilize prod data from within dev, you it would need to be read from a materialized view and re-indexed on the dev cluster to avoid consuming prod resources. this will allow for partial DAG downstream development models.
 
@@ -98,7 +98,7 @@ The following configurations should be considered and applied in the config.tf f
   - no clusters called _teamname_\_prod already existing
   - no clusters called _teamname_\_dev if you are configuring to create dev clusters
   - no quickstart cluster if you are configuring this template to manage the quickstart cluster
-  - no roles called _teamname_\_prodrole, _teamname_\_devrole, or sandboxrole already in the system
+  - no roles called _teamname_\_prodrole, _teamname_devrole, or sandboxrole already in the system
 - `terraform apply` will apply the template as configured
   
 
