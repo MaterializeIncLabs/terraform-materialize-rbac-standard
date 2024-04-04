@@ -1,6 +1,6 @@
 resource "materialize_cluster" "prod" {
   for_each = var.team_names
-  name = "${each.value}-prod"
+  name = "${each.value}_prod"
   size = var.prod_cluster_size
   replication_factor = var.prod_cluster_replication_factor
   ownership_role = materialize_role.prodrole[each.value].name
@@ -15,26 +15,26 @@ resource "materialize_schema" "prod" {
 
 resource "materialize_role" "prodrole" {
   for_each = var.team_names
-  name = "${each.value}-prodrole"
+  name = "${each.value}_prodrole"
 }
 
 resource "materialize_role_parameter" "prodrole_database_role_parameter" {
   for_each = var.team_names
-  role_name      = "${each.value}-prodrole"
+  role_name      = "${each.value}_prodrole"
   variable_name  = "database"
   variable_value = "${each.value}"
 }
 
 resource "materialize_role_parameter" "prodrole_cluster_role_parameter" {
   for_each = var.team_names
-  role_name      = "${each.value}-prodrole"
+  role_name      = "${each.value}_prodrole"
   variable_name  = "cluster"
-  variable_value = "${each.value}-prod"
+  variable_value = "${each.value}_prod"
 }
 
 resource "materialize_role_parameter" "prodrole_searchpath_role_parameter" {
   for_each = var.team_names
-  role_name      = "${each.value}-prodrole"
+  role_name      = "${each.value}_prodrole"
   variable_name  = "search_path"
   variable_value = "prod"
 }
@@ -42,7 +42,7 @@ resource "materialize_role_parameter" "prodrole_searchpath_role_parameter" {
 locals {
   team_cluster_schema_database_perms = {
     for pair in setproduct(var.team_names, var.all_cluster_schema_database_perms) :
-      "${pair[0]}-${pair[1]}" => {
+      "${pair[0]}_${pair[1]}" => {
         database  = materialize_database.databases[pair[0]].name
         permission  = pair[1]
         role = materialize_role.prodrole[pair[0]].name
@@ -84,7 +84,7 @@ resource "materialize_grant_system_privilege" "prod_clustercreate" {
 locals {
   team_table_perms = {
     for pair in setproduct(var.team_names, var.all_table_perms) :
-      "${pair[0]}-${pair[1]}" => {
+      "${pair[0]}_${pair[1]}" => {
         database  = materialize_database.databases[pair[0]].name
         permission  = pair[1]
         role = materialize_role.prodrole[pair[0]].name

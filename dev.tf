@@ -1,6 +1,6 @@
 resource "materialize_cluster" "dev" {
     for_each = var.create_dev_clusters ? var.team_names : []
-    name = "${each.value}-dev"
+    name = "${each.value}_dev"
     size = var.dev_clusters_size
     replication_factor = var.dev_clusters_replication_factor
     ownership_role = materialize_role.devrole[each.value].name
@@ -15,26 +15,26 @@ resource "materialize_schema" "dev" {
 
 resource "materialize_role" "devrole" {
   for_each = var.team_names
-  name = "${each.value}-devrole"
+  name = "${each.value}_devrole"
 }
 
 resource "materialize_role_parameter" "devrole_database_role_parameter" {
   for_each = var.team_names
-  role_name      = "${each.value}-devrole"
+  role_name      = "${each.value}_devrole"
   variable_name  = "database"
   variable_value = "${each.value}"
 }
 
 resource "materialize_role_parameter" "devrole_cluster_role_parameter" {
   for_each = var.create_dev_clusters ? var.team_names : []
-  role_name      = "${each.value}-devrole"
+  role_name      = "${each.value}_devrole"
   variable_name  = "cluster"
-  variable_value = "${each.value}-dev"
+  variable_value = "${each.value}_dev"
 }
 
 resource "materialize_role_parameter" "devrole_searchpath_role_parameter" {
   for_each = var.team_names
-  role_name      = "${each.value}-devrole"
+  role_name      = "${each.value}_devrole"
   variable_name  = "search_path"
   variable_value = "dev"
 }
@@ -42,7 +42,7 @@ resource "materialize_role_parameter" "devrole_searchpath_role_parameter" {
 locals {
   team_cluster_schema_database_perms_dev = {
     for pair in setproduct(var.team_names, var.all_cluster_schema_database_perms) :
-      "${pair[0]}-${pair[1]}" => {
+      "${pair[0]}_${pair[1]}" => {
         database  = materialize_database.databases[pair[0]].name
         permission  = pair[1]
         role = materialize_role.devrole[pair[0]].name
@@ -107,7 +107,7 @@ resource "materialize_table_grant_default_privilege" "prod_table_default_devrole
 locals {
   team_table_perms_dev = {
     for pair in setproduct(var.team_names, var.all_table_perms) :
-      "${pair[0]}-${pair[1]}" => {
+      "${pair[0]}_${pair[1]}" => {
         database  = materialize_database.databases[pair[0]].name
         permission  = pair[1]
         role = materialize_role.devrole[pair[0]].name
